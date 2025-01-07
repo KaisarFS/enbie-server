@@ -27,7 +27,6 @@ class UserController {
             // console.log(imgProfilePath, '<----- imgpORIFLLQWE');
 
             let imgProfilePath = req.file
-            console.log(imgProfilePath, '<----- imagee weee');
             if(!imgProfilePath) throw {name: 'Image Profile required'}
 
             const newUser = await User.create({
@@ -48,7 +47,7 @@ class UserController {
                 }
             })
         } catch (error) {
-            console.log(error, '<---- error register');
+            console.error(error, '<---- error register');
             next(error)
         }
     }
@@ -64,12 +63,12 @@ class UserController {
             if (!comparePassword(password, user.password)) throw { name: 'Invalid email/password' }
 
             const access_token = createToken({ id: user.id })
-            console.log(access_token, '<---- akses token /login');
+            console.error(access_token, '<---- akses token /login');
 
             res.status(200).json({ username: user.username, access_token })
 
         } catch (error) {
-            console.log(error, '<---- error login');
+            console.error(error, '<---- error login');
             next(error)
         }
     }
@@ -84,7 +83,6 @@ class UserController {
             });
             const payload = ticket.getPayload();
 
-            // Check if user already exist or not?
             const [user, created] = await User.findOrCreate({
                 where: { email: payload.email },
                 defaults: {
@@ -96,7 +94,6 @@ class UserController {
                 hooks: false
             });
             const access_token = createToken({ id: user.id })
-            console.log(user.id, '<-------');
             res.status(200).json({ access_token, username: payload.name, status: 'Regular', id: user.id })
         } catch (error) {
             next(error)
@@ -129,7 +126,7 @@ class UserController {
             res.status(200).json(findUser)
 
         } catch (error) {
-            console.log(error, '<---- error getUserProfile')
+            console.error(error, '<---- error getUserProfile')
             next(error);
         }
     }
@@ -152,7 +149,7 @@ class UserController {
             })
 
         } catch (error) {
-            console.log(error, '<----- error changeStatusPro');
+            console.error(error, '<----- error changeStatusPro');
             next(error)
         }
     }
@@ -178,12 +175,9 @@ class UserController {
 
             if (!created) throw { name: 'This player already in your favorite list' }
 
-            // console.log(user, '<---- ini user');
-            // console.log(created, '<---- ini created');
-
             res.status(201).json(created)
         } catch (error) {
-            console.log(error, '<----- error addFavoritePlayer');
+            console.error(error, '<----- error addFavoritePlayer');
             next(error)
         }
     }
@@ -209,7 +203,7 @@ class UserController {
             res.status(200).json(dataFavorite)
 
         } catch (error) {
-            console.log(error, '<------ error getAllFavorites');
+            console.error(error, '<------ error getAllFavorites');
             next(error)
         }
     }
@@ -241,12 +235,11 @@ class UserController {
             };
 
             const midtransToken = await snap.createTransaction(parameter)
-            // console.log(midtransToken, '<---- midtransToken');
             res.status(200).json(midtransToken);
 
 
         } catch (error) {
-            console.log(error, '<---- error midtrans');
+            console.error(error, '<---- error midtrans');
             next(error)
 
         }
